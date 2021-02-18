@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Serilog;
 
 namespace PrimeNumbers.WebService
 {
@@ -21,6 +17,15 @@ namespace PrimeNumbers.WebService
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging(logginBuilder =>
+                {
+                    logginBuilder.ClearProviders();
+                    logginBuilder.SetMinimumLevel(LogLevel.Trace);
+                    logginBuilder.AddSerilog(new LoggerConfiguration()
+                        .WriteTo.Console()
+                        .WriteTo.File("service.log")
+                        .CreateLogger());
                 });
     }
 }

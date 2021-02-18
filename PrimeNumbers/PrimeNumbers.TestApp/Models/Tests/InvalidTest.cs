@@ -1,4 +1,4 @@
-﻿namespace PrimeNumbers.TestApp.Modules
+﻿namespace PrimeNumbers.TestApp.Models.Tests
 {
     internal class InvalidTest : ITest
     {
@@ -7,7 +7,7 @@
         public string RequestWithRange { get; set; }
         public string RequestNumber { get; set; }
 
-        public InvalidTest(string requestWithRange, string requestNumber)
+        public InvalidTest(string requestNumber, string requestWithRange)
         {
             RequestNumber = requestNumber;
             RequestWithRange = requestWithRange;

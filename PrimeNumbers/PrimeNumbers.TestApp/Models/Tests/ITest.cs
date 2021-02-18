@@ -1,4 +1,4 @@
-﻿namespace PrimeNumbers.TestApp.Modules
+﻿namespace PrimeNumbers.TestApp.Models.Tests
 {
     internal interface ITest
     {
@@ -7,7 +7,7 @@
         string RequestWithRange { get; set; }
         string RequestNumber { get; set; }
 
-        ITest SetNewRequests(string requestWithRange, string requestNumber)
+        ITest SetNewRequests(string requestNumber, string requestWithRange)
         {
             RequestWithRange = requestWithRange;
             RequestNumber = requestNumber;

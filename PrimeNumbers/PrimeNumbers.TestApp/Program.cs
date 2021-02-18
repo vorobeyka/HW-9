@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using PrimeNumbers.TestApp.Modules;
+using PrimeNumbers.TestApp.Models.Tests;
 
 namespace PrimeNumbers.TestApp
 {
@@ -9,6 +9,9 @@ namespace PrimeNumbers.TestApp
         static async Task Main(string[] args)
         {
             var validator = TestValidator.GetInstance();
+
+            //test for root "/"
+            await validator.TestRoot();
 
             //valid tests
             var validTest = new ValidTest("/primes/7", "/primes?from=1&to=5") as ITest;

@@ -2,13 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PrimeNumbers.WebService.Services;
 using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace PrimeNumbers.WebService
 {
@@ -30,14 +27,23 @@ namespace PrimeNumbers.WebService
             {
                 endpoints.MapGet("/", async context =>
                 {
+                    var logger = context.RequestServices.GetService<ILogger<Startup>>();
+
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
                     await context.Response.WriteAsync("Web service 'Prime numbers' by Andrey Basystyi");
+                    logger.LogInformation("root was requested");
                 });
 
                 endpoints.MapGet("/primes", async context =>
                 {
+                    var logger = context.RequestServices.GetService<ILogger<Startup>>();
+                    logger.LogInformation("primes from range was requested");
+
                     if (int.TryParse(context.Request.Query["from"].FirstOrDefault(), out var from)
                         && int.TryParse(context.Request.Query["to"].FirstOrDefault(), out var to))
                     {
+                        logger.LogInformation($"sets range {from}:{to}");
+
                         context.Response.StatusCode = (int)HttpStatusCode.OK;
 
                         var primeNumbers = context.RequestServices.GetService<IPrimeNumbersService>();
@@ -49,14 +55,19 @@ namespace PrimeNumbers.WebService
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     }
+                    logger.LogInformation($"status code: {context.Response.StatusCode}");
                 });
 
                 endpoints.MapGet("/primes/{id:int}", async context =>
                 {
+                    var logger = context.RequestServices.GetService<ILogger<Startup>>();
+
                     var primeNumbers = context.RequestServices.GetService<IPrimeNumbersService>();
                     var number = int.Parse((string)context.Request.RouteValues["id"]);
+                    logger.LogInformation($"prime number for {number} was requested");
 
                     var isPrime = await primeNumbers.IsPrimeNumber(number);
+                    logger.LogInformation($"is prime number {number}: {isPrime}");
                     if (isPrime)
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -65,6 +76,7 @@ namespace PrimeNumbers.WebService
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     }
+                    logger.LogInformation($"status code: {context.Response.StatusCode}");
                 });
             });
         }
