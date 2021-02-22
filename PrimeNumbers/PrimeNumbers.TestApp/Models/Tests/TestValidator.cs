@@ -5,8 +5,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Net;
 using System.Linq;
-using System.Collections.Generic;
-using PrimeNumbers.TestApp.Models;
 
 namespace PrimeNumbers.TestApp.Models.Tests
 {
@@ -66,7 +64,7 @@ namespace PrimeNumbers.TestApp.Models.Tests
             if ((PrimeNumbers.IsPrime(number) && statusCode == HttpStatusCode.OK)
                 || (!PrimeNumbers.IsPrime(number) && statusCode == HttpStatusCode.NotFound))
             {
-                Console.WriteLine("Test success!");
+                Console.WriteLine("Test success!\n");
             }
             else
             {
@@ -78,11 +76,16 @@ namespace PrimeNumbers.TestApp.Models.Tests
         {
             if (statusCode == HttpStatusCode.OK)
             {
-                var cleanContent = content.Replace("{", "").Replace("}", "");
-                var items = cleanContent.Split(',').Select(x => int.Parse(x));
                 var primes = PrimeNumbers.FromRange((int)range.Item1, (int)range.Item2);
+                var cleanContent = content.Replace("{", "").Replace("}", "");
+                var items = string.IsNullOrEmpty(cleanContent)
+                    ? Enumerable.Empty<int>()
+                    : cleanContent.Split(',').Select(x => int.Parse(x));
 
-                if (primes.Equals(primes)) Console.WriteLine("Test success!");
+                Console.WriteLine($"Received array: {string.Join(' ', items)}");
+                Console.WriteLine($"Expected array: {string.Join(' ', primes)}");
+
+                if (primes.SequenceEqual(items)) Console.WriteLine("Test success!");
                 else Console.WriteLine("Test failed!");
             }
             else if (range.Item1 == null || range.Item1.GetType() != typeof(int)
@@ -99,7 +102,7 @@ namespace PrimeNumbers.TestApp.Models.Tests
         private void WriteResult(string request, int statusCode, int expectedStatusCode)
         {
             Console.WriteLine($"Request: {request}");
-            Console.WriteLine($"Status code: {statusCode}");
+            Console.WriteLine($"Received status code: {statusCode}");
             Console.WriteLine($"Expected status code: {expectedStatusCode}");
         }
     }

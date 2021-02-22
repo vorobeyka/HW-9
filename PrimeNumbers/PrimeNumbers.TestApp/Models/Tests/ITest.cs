@@ -4,14 +4,9 @@
     {
         int ExpectedStatusCodeWithRange { get; }
         int ExpectedStatusCodeWithNumber { get; }
-        string RequestWithRange { get; set; }
-        string RequestNumber { get; set; }
+        string RequestWithRange { get; }
+        string RequestNumber { get; }
 
-        ITest SetNewRequests(string requestNumber, string requestWithRange)
-        {
-            RequestWithRange = requestWithRange;
-            RequestNumber = requestNumber;
-            return this;
-        }
+        ITest SetNewRequests(string requestNumber, string requestWithRange);
     }
 }
